@@ -1,5 +1,5 @@
-import React, { useLayoutEffect } from 'react'
-import { View, StatusBar, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, FlatList } from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
+import { View, ScrollView,LogBox, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, FlatList } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -9,6 +9,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 export default function Library({ navigation }) {
+    const [show,setShow] = useState(false)
+    LogBox.ignoreAllLogs();
     useLayoutEffect(() => {
         navigation.setOptions({
             headerStyle: {
@@ -30,7 +32,7 @@ export default function Library({ navigation }) {
             ),
             headerRight: () => (
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity style={styles.headIconContainer}>
+                    <TouchableOpacity onPress={()=>{setShow(true)}} style={styles.headIconContainer}>
                         <Feather name='cast' size={25} color={'white'} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.headIconContainer}>
@@ -75,8 +77,43 @@ export default function Library({ navigation }) {
         },
     ]
 
+    const data = [
+        { label: 'Recently added', value: 'Recently added' },
+        { label: 'A-Z', value: 'A-Z' },
+    ]
+    const [value1, setValue1] = useState('Recently added');
+
+    const Playlists = [
+        {
+            name: 'React Native',
+            channel: 'Programming with mosh',
+            videos: '6 videos',
+            channelImage: require('../assets/images/ukhano.jpg'),
+        },
+        {
+            name: 'Machine Learning',
+            channel: 'sentdex',
+            videos: '72 videos',
+            channelImage: require('../assets/images/almidrar.jpg'),
+        },
+        {
+            name: 'React Projects',
+            channel: 'Traversy Media',
+            videos: '38 vidoes',
+            channelImage: require('../assets/images/nauman.jpg'),
+        },
+        {
+            name: 'Vanilla JavaScript',
+            channel: 'Traversy Media',
+            videos: '56 videos',
+            channelImage: require('../assets/images/almidrar.jpg'),
+        },
+    ]
+
     return (
-        <View style={{ flex: 1, backgroundColor: '#0d0d0d' }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            
+                <View style={{ flex: 1, backgroundColor: '#0d0d0d' }}>
             <View style={{ flex: 0.08, flexDirection: 'row' }}>
                 <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 10 }}>
                     <MaterialCommunityIcons name='history' color='white' size={40} />
@@ -110,8 +147,8 @@ export default function Library({ navigation }) {
                 />
             </View>
 
-            <View style={{ flex: 0.25,justifyContent:'center',borderBottomColor:'white',borderBottomWidth:0.3 }}>
-                <View style={{ flexDirection: 'row',alignItems:'flex-end'}}>
+            <View style={{ flex: 0.25, justifyContent: 'center', borderBottomColor: 'white', borderBottomWidth: 0.3 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                     <View style={styles.left}>
                         <Octicons name='video' size={25} color={'white'} />
                     </View>
@@ -119,15 +156,15 @@ export default function Library({ navigation }) {
                         <Text style={styles.text1}>Your videos</Text>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row',alignItems:'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={styles.left}>
                         <MaterialCommunityIcons name='download' size={25} color={'white'} />
                     </View>
-                    <View style={[styles.right,{marginTop:5}]}>
+                    <View style={[styles.right, { marginTop: 5 }]}>
                         <Text style={styles.text1}>Downloads</Text>
                         <Text style={{ color: 'lightgrey' }}>100 videos</Text>
                     </View>
-                    <View style={{position:'absolute',right:20}}>
+                    <View style={{ position: 'absolute', right: 20 }}>
                         <Ionicons name='ios-checkmark-done-circle' color="white" size={25} />
                     </View>
                 </View>
@@ -141,17 +178,79 @@ export default function Library({ navigation }) {
                 </View>
             </View>
 
-            <View style={{flex:0.42,backgroundColor:'green'}}>
-                <View>
-                    <View>
-                        <Text>Playlists</Text>
-                        <Dropdown 
-                            data={options}
+            <View style={{ flex: 0.42, }}>
+                <View style={{flex:1}}>
+                    <View style={{flex:0.25, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Text style={{ fontSize: 20, color: 'white', fontWeight: '800', marginLeft: 10 }}>Playlists</Text>
+                        <Dropdown
+                            style={{ height: 50, borderRadius: 0, paddingLeft: 10, fontSize: 12, marginHorizontal: 20, width: 150, marginVertical: 10 }}
+                            data={data}
+                            itemContainerStyle={{ backgroundColor: 'grey' }}
+                            itemTextStyle={{ color: 'red' }}
+                            containerStyle={{ backgroundColor: 'grey', }}
+                            iconStyle={{ tintColor: 'white' }}
+                            selectedTextStyle={{ color: 'white' }}
+                            maxHeight={100}
+                            labelField="label"
+                            valueField="value"
+                            value={value1}
+                            onChange={item => {
+                                setValue1(item.value);
+                            }}
                         />
+                    </View>
+                    <View style={{flex:0.75}}>
+                        <FlatList
+                            data={Playlists}
+                            renderItem={({ item }) => (
+                                <View style={{marginVertical:5,flexDirection:'row',paddingLeft:10,paddingVertical:8}}>
+                                    <View>
+                                        <Image source={item.channelImage} style={{width:50,height:50,borderRadius:10}} />
+                                    </View>
+                                    <View >
+                                        <View>
+                                            <Text style={[styles.text1,{fontSize:16,marginLeft:15}]}>{item.name}</Text>
+                                        </View>
+                                        <View style={{flexDirection:'row',}}>
+                                            <Text style={{fontSize:14,color:'grey',marginLeft:15,marginRight:3}}>{item.channel}  - </Text>
+                                            <Text style={{fontSize:14,color:'grey'}}>{item.videos}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
+                        />
+
                     </View>
                 </View>
             </View>
-        </View>
+                </View>
+            
+                {show==true &&
+                // <TouchableWithoutFeedback onPress={()=>{setShow(false)}} style={{flex:1,backgroundColor:'red',justifyContent:'center',alignItems:'center'}} >
+                    // <View style={{backgroundColor:'#242222',width:'100%',height:700,justifyContent:"center",alignItems:'center',}}>
+                        <View style={{backgroundColor:'black',height:250,width:'90%',justifyContent:'center',position:'absolute',top:220,left:25}}>
+                            <View style={{height:50,paddingLeft:20,flexDirection:'row',justifyContent:'space-between'}}>
+                                <Text style={{fontSize:24,fontWeight:'700',marginLeft:0,color:'white'}}>Connect to a device</Text>
+                                <TouchableOpacity onPress={()=>{setShow(false)}}><MaterialIcons name='cancel' style={{marginRight:20}} color='white' size={30} /></TouchableOpacity>
+                            </View>
+                            <View style={{height:50,paddingLeft:20,flexDirection:'row'}}>
+                                <AntDesign name='loading1' size={30} color='blue' />
+                                <Text style={styles.certeralText}>Searching for device</Text>
+                            </View>
+                            <TouchableOpacity style={{height:50,flexDirection:'row',paddingLeft:20}}>
+                                <MaterialIcons name='connected-tv' size={30} color={'white'} />
+                                <Text style={styles.certeralText}>Link with TV code</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{height:50,paddingLeft:20,flexDirection:'row'}}>
+                                <MaterialIcons name='error-outline' size={30} color={'white'} />
+                                <Text style={styles.certeralText}>Learn more</Text>
+                            </TouchableOpacity>
+                        </View>
+                    // </View>
+                // </TouchableWithoutFeedback>
+                }
+        
+        </ScrollView>
     )
 }
 
@@ -172,14 +271,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: '600'
     },
-    left:{
-        marginLeft:20,
-        marginRight:30,
-        marginVertical:8
+    left: {
+        marginLeft: 20,
+        marginRight: 30,
+        marginVertical: 8
     },
-    right:{
+    right: {
+        fontSize: 18,
+        marginVertical: 8
+    },
+    certeralText:{
         fontSize:18,
-        marginVertical:8
+        color:'white',
+        fontWeight:'500',
+        marginLeft:20,
     }
 
 })
